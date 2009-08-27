@@ -1,0 +1,3254 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>App.EventBus</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>buster-2.2: Almost but not quite entirely unlike FRP</TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>App.EventBus</FONT
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Description</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Not exactly the FRP model, but rather a model of a large application with
+   heterogenous data and many inputs and outputs.  An application is in its
+   essence a collection of widgets and behaviours and events with a bus.
+   The bus holds events and manages the event timeline.  Behaviours and
+   widgets are continuous. Widgets applied to the bus make insertions and
+   never deletions. Behaviours applied to the bus make insertions and deletions.
+</P
+><P
+>Behaviours are composable using combinators that set one Behaviour as either
+   behind, in front, or beside another behaviour on the bus.  The in front and
+   behind combinators  establish that the behaviour <A HREF="behind.html"
+>behind</A
+> the others
+   sees the results of the other behaviours' application to the bus. The beside
+   combinator says that the combinators see the same bus.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3ATimeSpan"
+>TimeSpan</A
+>  </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+>= <A HREF="#v%3APersistent"
+>Persistent</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3ATime"
+>Time</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/time/Data-Time-Clock.html#t%3ADiffTime"
+>DiffTime</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AIterations"
+>Iterations</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aseconds"
+>seconds</A
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aminutes"
+>minutes</A
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Ahours"
+>hours</A
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Adays"
+>days</A
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aonce"
+>once</A
+> :: <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3ADiff"
+>Diff</A
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+>= <A HREF="#v%3AInsertion"
+>Insertion</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3ADeletion"
+>Deletion</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AEData"
+>EData</A
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+>= <A HREF="#v%3AEString"
+>EString</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEByteString"
+>EByteString</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Internal.html#t%3AByteString"
+>ByteString</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEByteStringL"
+>EByteStringL</A
+> [<A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Internal.html#t%3AByteString"
+>ByteString</A
+>]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AELByteString"
+>ELByteString</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Lazy-Internal.html#t%3AByteString"
+>ByteString</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AELByteStringL"
+>ELByteStringL</A
+> [<A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Lazy-Internal.html#t%3AByteString"
+>ByteString</A
+>]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEChar"
+>EChar</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AChar"
+>Char</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEDouble"
+>EDouble</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEInt"
+>EInt</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEBool"
+>EBool</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEStringL"
+>EStringL</A
+> [<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEDoubleL"
+>EDoubleL</A
+> [<A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+>]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEIntL"
+>EIntL</A
+> [<A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+>]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEBoolL"
+>EBoolL</A
+> [<A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+>]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEOther"
+>EOther</A
+> a</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEAssoc"
+>EAssoc</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEAssocL"
+>EAssocL</A
+> [(<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)]</TD
+></TR
+><TR
+><TD CLASS="decl"
+>| <A HREF="#v%3AEOtherL"
+>EOtherL</A
+> [a]</TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AsafeShow"
+>safeShow</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Maybe.html#t%3AMaybe"
+>Maybe</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3AEvent"
+>Event</A
+> a = <A HREF="#v%3AEvent"
+>Event</A
+> {<TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Aename"
+>ename</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Agroup"
+>group</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Atimespan"
+>timespan</A
+> :: <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Aeventdata"
+>eventdata</A
+> :: a</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Asrc"
+>src</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3Atime"
+>time</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/time/Data-Time-Clock.html#t%3AUTCTime"
+>UTCTime</A
+></TD
+></TR
+></TABLE
+>}</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A HREF="#t%3ABus"
+>Bus</A
+> a = <A HREF="#v%3ABus"
+>Bus</A
+> {<TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AnameMap"
+>nameMap</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a))</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AsrcMap"
+>srcMap</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a))</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AgroupMap"
+>groupMap</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a))</TD
+></TR
+><TR
+><TD CLASS="recfield"
+><A HREF="#v%3AfullyQualifiedMap"
+>fullyQualifiedMap</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>) (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+></TABLE
+>}</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AeventsByName"
+>eventsByName</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AeventsBySource"
+>eventsBySource</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AeventsByGroup"
+>eventsByGroup</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AeventByQName"
+>eventByQName</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Maybe.html#t%3AMaybe"
+>Maybe</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AemptyBus"
+>emptyBus</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AaddEvent"
+>addEvent</A
+> ::  <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A HREF="#t%3AWidget"
+>Widget</A
+> a = <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A HREF="#t%3AFuture"
+>Future</A
+> a = <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a, <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a])</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Afuture"
+>future</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a] -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A HREF="#t%3ABehaviour"
+>Behaviour</A
+> a = <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Apassthrough"
+>passthrough</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3A%3C~%3C"
+>(&lt;~&lt;)</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3A%3E~%3E"
+>(&gt;~&gt;)</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3A%7C~%7C"
+>(|~|)</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Abus"
+>bus</A
+> ::  [<A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> a] -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> b -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AbusIteration"
+>busIteration</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a) -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aproduce"
+>produce</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+> -&gt; a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> (<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3Aproduce%27"
+>produce'</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+> -&gt; a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeNamedEventsCollectivelyWith"
+>consumeNamedEventsCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeNamedEvents"
+>consumeNamedEvents</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeEventGroup"
+>consumeEventGroup</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeEventsFromSource"
+>consumeEventsFromSource</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeFullyQualifiedEvent"
+>consumeFullyQualifiedEvent</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AmodifyEventData"
+>modifyEventData</A
+> ::  <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; (a -&gt; a) -&gt; [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AmodifyEvent"
+>modifyEvent</A
+> ::  <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeNamedEventsWith"
+>consumeNamedEventsWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeEventGroupCollectivelyWith"
+>consumeEventGroupCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeEventGroupWith"
+>consumeEventGroupWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeEventsFromSourceCollectivelyWith"
+>consumeEventsFromSourceCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeEventsFromSourceWith"
+>consumeEventsFromSourceWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconsumeFullyQualifiedEventWith"
+>consumeFullyQualifiedEventWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollNamedEventsCollectivelyWith"
+>pollNamedEventsCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollNamedEventsWith"
+>pollNamedEventsWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollEventGroupCollectivelyWith"
+>pollEventGroupCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollEventGroupWith"
+>pollEventGroupWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollEventsFromSourceCollectivelyWith"
+>pollEventsFromSourceCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollEventsFromSourceWith"
+>pollEventsFromSourceWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollFullyQualifiedEventWith"
+>pollFullyQualifiedEventWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollAllEventsWith"
+>pollAllEventsWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3ApollAllEventsCollectivelyWith"
+>pollAllEventsCollectivelyWith</A
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Documentation</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t%3ATimeSpan"
+></A
+><B
+>TimeSpan</B
+>  </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Defines the amount of time that an event exists.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3APersistent"
+></A
+><B
+>Persistent</B
+></TD
+><TD CLASS="rdoc"
+>The event exists forever
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3ATime"
+></A
+><B
+>Time</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/time/Data-Time-Clock.html#t%3ADiffTime"
+>DiffTime</A
+></TD
+><TD CLASS="rdoc"
+>The event exists for a specified amount of real time
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AIterations"
+></A
+><B
+>Iterations</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+></TD
+><TD CLASS="rdoc"
+>The event exists for a certain number of samples of time from its inception.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:TimeSpan')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:TimeSpan" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Eq.html#t%3AEq"
+>Eq</A
+> <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Ord.html#t%3AOrd"
+>Ord</A
+> <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Aseconds"
+></A
+><B
+>seconds</B
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Aminutes"
+></A
+><B
+>minutes</B
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Ahours"
+></A
+><B
+>hours</B
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Adays"
+></A
+><B
+>days</B
+> :: Integer -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Aonce"
+></A
+><B
+>once</B
+> :: <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t%3ADiff"
+></A
+><B
+>Diff</B
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Defines time in terms of the differences from time t0 to the next instant. This is the type
+   returned by Behaviours to describe time directly after the Behaviour.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AInsertion"
+></A
+><B
+>Insertion</B
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+><TD CLASS="rdoc"
+>Time t1 contains all events at time t0 plus this event.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3ADeletion"
+></A
+><B
+>Deletion</B
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+><TD CLASS="rdoc"
+>Time t1 contains all events at time t0 minus this event.
+</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Diff')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Diff" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t%3AEData"
+></A
+><B
+>EData</B
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>Defines the data attachable to events.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEString"
+></A
+><B
+>EString</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEByteString"
+></A
+><B
+>EByteString</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Internal.html#t%3AByteString"
+>ByteString</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEByteStringL"
+></A
+><B
+>EByteStringL</B
+> [<A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Internal.html#t%3AByteString"
+>ByteString</A
+>]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AELByteString"
+></A
+><B
+>ELByteString</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Lazy-Internal.html#t%3AByteString"
+>ByteString</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AELByteStringL"
+></A
+><B
+>ELByteStringL</B
+> [<A HREF="/usr/local/share/doc/ghc/libraries/bytestring/Data-ByteString-Lazy-Internal.html#t%3AByteString"
+>ByteString</A
+>]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEChar"
+></A
+><B
+>EChar</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AChar"
+>Char</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEDouble"
+></A
+><B
+>EDouble</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEInt"
+></A
+><B
+>EInt</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEBool"
+></A
+><B
+>EBool</B
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEStringL"
+></A
+><B
+>EStringL</B
+> [<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEDoubleL"
+></A
+><B
+>EDoubleL</B
+> [<A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3ADouble"
+>Double</A
+>]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEIntL"
+></A
+><B
+>EIntL</B
+> [<A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+>]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEBoolL"
+></A
+><B
+>EBoolL</B
+> [<A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Bool.html#t%3ABool"
+>Bool</A
+>]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEOther"
+></A
+><B
+>EOther</B
+> a</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEAssoc"
+></A
+><B
+>EAssoc</B
+> (<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEAssocL"
+></A
+><B
+>EAssocL</B
+> [(<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEOtherL"
+></A
+><B
+>EOtherL</B
+> [a]</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:EData')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:EData" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Eq.html#t%3AEq"
+>Eq</A
+> a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Eq.html#t%3AEq"
+>Eq</A
+> (<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Read.html#t%3ARead"
+>Read</A
+> (<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AsafeShow"
+></A
+><B
+>safeShow</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Maybe.html#t%3AMaybe"
+>Maybe</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/ghc-prim/GHC-Types.html#t%3AInt"
+>Int</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+></TR
+><TR
+><TD CLASS="doc"
+>Show without risking running into an unshowable type.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t%3AEvent"
+></A
+><B
+>Event</B
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>An discrete event in time
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="5" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AEvent"
+></A
+><B
+>Event</B
+></TD
+><TD CLASS="rdoc"
+>The time of the event's inception.
+</TD
+></TR
+><TR
+><TD CLASS="body" COLSPAN="2"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3Aename"
+></A
+><B
+>ename</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+><TD CLASS="rdoc"
+>The unique name of an event.  Group + src + name = the fully qualified name FQN of the event.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3Agroup"
+></A
+><B
+>group</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+><TD CLASS="rdoc"
+>The group of an event.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3Atimespan"
+></A
+><B
+>timespan</B
+> :: <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+></TD
+><TD CLASS="rdoc"
+>The timespan from <A HREF="time.html"
+>time</A
+> that an event exists.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3Aeventdata"
+></A
+><B
+>eventdata</B
+> :: a</TD
+><TD CLASS="rdoc"
+>The data attached to the event.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3Asrc"
+></A
+><B
+>src</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+></TD
+><TD CLASS="rdoc"
+>The behaviour or widget that assigned the event to time.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3Atime"
+></A
+><B
+>time</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/time/Data-Time-Clock.html#t%3AUTCTime"
+>UTCTime</A
+></TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Event')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Event" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Eq.html#t%3AEq"
+>Eq</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Ord.html#t%3AOrd"
+>Ord</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>data</SPAN
+>  <A NAME="t%3ABus"
+></A
+><B
+>Bus</B
+> a </TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="ndoc"
+>The type of a discrete sample of continuous time.
+</TD
+></TR
+><TR
+><TD CLASS="section4"
+>Constructors</TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="5" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3ABus"
+></A
+><B
+>Bus</B
+></TD
+><TD CLASS="rdoc"
+>The map of FQNs to events.
+</TD
+></TR
+><TR
+><TD CLASS="body" COLSPAN="2"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AnameMap"
+></A
+><B
+>nameMap</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a))</TD
+><TD CLASS="rdoc"
+>The map of just Event.name to events.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AsrcMap"
+></A
+><B
+>srcMap</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a))</TD
+><TD CLASS="rdoc"
+>The map of just Event.src to events.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AgroupMap"
+></A
+><B
+>groupMap</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a))</TD
+><TD CLASS="rdoc"
+>The map of just Event.group to events.
+</TD
+></TR
+><TR
+><TD CLASS="arg"
+><A NAME="v%3AfullyQualifiedMap"
+></A
+><B
+>fullyQualifiedMap</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Map.html#t%3AMap"
+>Map</A
+> (<A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>, <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+>) (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+><TD CLASS="rdoc"
+></TD
+></TR
+></TABLE
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="section4"
+><IMG SRC="minus.gif" CLASS="coll" ONCLICK="toggle(this,'i:Bus')" ALT="show/hide"
+> Instances</TD
+></TR
+><TR
+><TD CLASS="body"
+><DIV ID="i:Bus" STYLE="display:block;"
+><TABLE CLASS="vanilla" CELLSPACING="1" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Monoid.html#t%3AMonoid"
+>Monoid</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a)</TD
+></TR
+></TABLE
+></DIV
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AeventsByName"
+></A
+><B
+>eventsByName</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AeventsBySource"
+></A
+><B
+>eventsBySource</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AeventsByGroup"
+></A
+><B
+>eventsByGroup</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AeventByQName"
+></A
+><B
+>eventByQName</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Maybe.html#t%3AMaybe"
+>Maybe</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AemptyBus"
+></A
+><B
+>emptyBus</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>The empty bus
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AaddEvent"
+></A
+><B
+>addEvent</B
+> ::  <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Add an event to time within the bus
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A NAME="t%3AWidget"
+></A
+><B
+>Widget</B
+> a = <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="doc"
+>The type of widgets.
+   A widget is an input-only way to assign Events to time.  A mouse is a widget.  A keyboard is a
+   widget.  A webcam is a widget, and so on.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A NAME="t%3AFuture"
+></A
+><B
+>Future</B
+> a = <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a, <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a])</TD
+></TR
+><TR
+><TD CLASS="doc"
+>The type of future events..
+   A behaviour doesn't know about the time that it assigns events, only that they exist
+   at some point after the time that the Behaviour sampled.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Afuture"
+></A
+><B
+>future</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a] -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>An IO action sometime in the future.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><SPAN CLASS="keyword"
+>type</SPAN
+> <A NAME="t%3ABehaviour"
+></A
+><B
+>Behaviour</B
+> a = <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Obtain the final value of a Future.  Blocks until the value is available
+</P
+><P
+>The type of a Behaviour.  A behaviour maps the bus to a list of differences to apply to the bus
+   before the next Behaviour's sample of time.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Apassthrough"
+></A
+><B
+>passthrough</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>The null Behaviour.  Samples the bus and adds and deletes nothing.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3A%3C~%3C"
+></A
+><B
+>(&lt;~&lt;)</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>the in front of behaviour combinator. behaviour 1 is in front of behaviour 0, so behavour 0 will see the bus filtered through behaviour 1
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3A%3E~%3E"
+></A
+><B
+>(&gt;~&gt;)</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>the behind behaviour combinator. behaviour 0 is behind behaviour 1, so behaviour 0 will see the bus filtered through behaviour 1
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3A%7C~%7C"
+></A
+><B
+>(|~|)</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>the beside behaviour combinator. All behaviours that are side-by-side see the same bus.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Abus"
+></A
+><B
+>bus</B
+> ::  [<A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> a] -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> b -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="doc"
+>An infinite loop of behaviours and widgets over time, sampled forward.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AbusIteration"
+></A
+><B
+>busIteration</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a) -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample time and apply the behaviour to that sample.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Aproduce"
+></A
+><B
+>produce</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+> -&gt; a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> (<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a)</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Assign an event to time given some event data and a TimeSpan.
+</P
+><PRE
+>produce group source nm timetolive edata</PRE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3Aproduce%27"
+></A
+><B
+>produce'</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ATimeSpan"
+>TimeSpan</A
+> -&gt; a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Control-Concurrent-MVar.html#t%3AMVar"
+>MVar</A
+> (<A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> ()</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Assign an event to time from a widget.
+</P
+><PRE
+>produce' group source nm timetolive edata bus</PRE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeNamedEventsCollectivelyWith"
+></A
+><B
+>consumeNamedEventsCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given name at the current time and output their deletions as Diffs as
+   well as any additional Diffs returned by the behaviour.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeNamedEvents"
+></A
+><B
+>consumeNamedEvents</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeEventGroup"
+></A
+><B
+>consumeEventGroup</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeEventsFromSource"
+></A
+><B
+>consumeEventsFromSource</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeFullyQualifiedEvent"
+></A
+><B
+>consumeFullyQualifiedEvent</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AmodifyEventData"
+></A
+><B
+>modifyEventData</B
+> ::  <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; (a -&gt; a) -&gt; [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AmodifyEvent"
+></A
+><B
+>modifyEvent</B
+> ::  <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeNamedEventsWith"
+></A
+><B
+>consumeNamedEventsWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeEventGroupCollectivelyWith"
+></A
+><B
+>consumeEventGroupCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given group at the current time and output their deletions as Diffs as
+   well as any additional Diffs returned by the behaviour.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeEventGroupWith"
+></A
+><B
+>consumeEventGroupWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeEventsFromSourceCollectivelyWith"
+></A
+><B
+>consumeEventsFromSourceCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given source at the current time and output their deletions as Diffs as
+   well as any additional Diffs returned by the behaviour.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeEventsFromSourceWith"
+></A
+><B
+>consumeEventsFromSourceWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconsumeFullyQualifiedEventWith"
+></A
+><B
+>consumeFullyQualifiedEventWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample a single fully qualified event at the current time and output their deletions as Diffs as
+   well as any additional Diffs returned by the behaviour.  Parameter order is bus, group, source, name
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollNamedEventsCollectivelyWith"
+></A
+><B
+>pollNamedEventsCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given name and apply a Behaviour
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollNamedEventsWith"
+></A
+><B
+>pollNamedEventsWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given name and apply a Behaviour to each
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollEventGroupCollectivelyWith"
+></A
+><B
+>pollEventGroupCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given group and apply a Behaviour
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollEventGroupWith"
+></A
+><B
+>pollEventGroupWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a gien group and apply a Behaviour to each.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollEventsFromSourceCollectivelyWith"
+></A
+><B
+>pollEventsFromSourceCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given source and apply a Behaviour
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollEventsFromSourceWith"
+></A
+><B
+>pollEventsFromSourceWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample all events with a given source and apply a Behaviour to each.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollFullyQualifiedEventWith"
+></A
+><B
+>pollFullyQualifiedEventWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Sample a single fully qualified event and output some Diffs.
+   Parameter order is bus, group, source, name.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollAllEventsWith"
+></A
+><B
+>pollAllEventsWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Apply a behaviour to all events in the bus, one event at a time.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3ApollAllEventsCollectivelyWith"
+></A
+><B
+>pollAllEventsCollectivelyWith</B
+> ::  <A HREF="App-EventBus.html#t%3ABus"
+>Bus</A
+> a -&gt; (<A HREF="/usr/local/share/doc/ghc/libraries/containers/Data-Set.html#t%3ASet"
+>Set</A
+> (<A HREF="App-EventBus.html#t%3AEvent"
+>Event</A
+> a) -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AIO"
+>IO</A
+> [<A HREF="App-EventBus.html#t%3ADiff"
+>Diff</A
+> a]) -&gt; <A HREF="App-EventBus.html#t%3AFuture"
+>Future</A
+> a</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Apply a behaviour to the collection of all events on the bus at once
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.3.0</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>

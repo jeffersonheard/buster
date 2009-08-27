@@ -1,0 +1,373 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>App.Behaviours.Exception</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>buster-2.2: Almost but not quite entirely unlike FRP</TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>App.Behaviours.Exception</FONT
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Description</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions slightly more gracefully than the Haskell runtime does.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AunhandledExceptionBehaviour"
+>unhandledExceptionBehaviour</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdisregardExceptionsFromSource"
+>disregardExceptionsFromSource</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdisregardExceptionsNamed"
+>disregardExceptionsNamed</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AprintAndDisregardExceptionsFromSource"
+>printAndDisregardExceptionsFromSource</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AprintAndDisregardExceptionsNamed"
+>printAndDisregardExceptionsNamed</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AlogAndDisregardExceptionsFromSource"
+>logAndDisregardExceptionsFromSource</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AHandle"
+>Handle</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AlogAndDisregardExceptionsNamed"
+>logAndDisregardExceptionsNamed</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AHandle"
+>Handle</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Documentation</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AunhandledExceptionBehaviour"
+></A
+><B
+>unhandledExceptionBehaviour</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Bork the program when an unhandled exception makes it to this behaviour.
+   Catches all events with the group &quot;Exception&quot; and throws them as one big exception.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AdisregardExceptionsFromSource"
+></A
+><B
+>disregardExceptionsFromSource</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions by completely ignoring them. Not recommended, really, but hey, who am I to judge?
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AdisregardExceptionsNamed"
+></A
+><B
+>disregardExceptionsNamed</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions by completely ignoring them. Not recommended, really, but hey, who am I to judge?
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AprintAndDisregardExceptionsFromSource"
+></A
+><B
+>printAndDisregardExceptionsFromSource</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions by printing them to stdout and then completely ignoring them.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AprintAndDisregardExceptionsNamed"
+></A
+><B
+>printAndDisregardExceptionsNamed</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions by printing them to stdout and then completely ignoring them
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AlogAndDisregardExceptionsFromSource"
+></A
+><B
+>logAndDisregardExceptionsFromSource</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AHandle"
+>Handle</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions by printing them to a handle and then completely ignoring them.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AlogAndDisregardExceptionsNamed"
+></A
+><B
+>logAndDisregardExceptionsNamed</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/System-IO.html#t%3AHandle"
+>Handle</A
+> -&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+>Handle exceptions by printing them to handle and then completely ignoring them
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.3.0</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>

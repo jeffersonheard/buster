@@ -1,0 +1,667 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>App.Behaviours.FileOps</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>buster-2.2: Almost but not quite entirely unlike FRP</TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>App.Behaviours.FileOps</FONT
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Description</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>This module handles read, write, encode, and decode of files.  It also cleanly handles exceptions
+   by introducing Exception events that are handlable by the behaviours in <A HREF="App-Behaviours-Exception.html"
+>App.Behaviours.Exception</A
+>
+   which exit your program gracefully, or by your own user defined exception handlers.
+</P
+><P
+>It can handle datatypes <TT
+>EData a</TT
+> with Binary, Show, and Read instances as well.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AreadFileBehaviour"
+>readFileBehaviour</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AreadFileBehaviourNR"
+>readFileBehaviourNR</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdecodeFileBehaviour"
+>decodeFileBehaviour</A
+> :: Binary a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AdecodeFileBehaviourNB"
+>decodeFileBehaviourNB</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteFileBehaviourNS"
+>writeFileBehaviourNS</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AwriteFileBehaviour"
+>writeFileBehaviour</A
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AencodeFileBehaviourNB"
+>encodeFileBehaviourNB</A
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AencodeFileBehaviour"
+>encodeFileBehaviour</A
+> :: Binary a =&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Documentation</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AreadFileBehaviour"
+></A
+><B
+>readFileBehaviour</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Read.html#t%3ARead"
+>Read</A
+> a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>readFileBehaviour name datatype</TT
+> looks for any event with the name <EM
+>name</EM
+> and reads the file
+   into an event following the pattern:
+</P
+><UL
+><LI
+> name: same as filename.
+</LI
+><LI
+> group: same as name of the behaviour, <TT
+>name</TT
+>
+</LI
+><LI
+> source: &quot;ReadSource&quot;
+</LI
+><LI
+> timespan: Persistent
+</LI
+><LI
+> eventdata: the file, read in and processed using <TT
+>read</TT
+> to be of the datatype that
+        corresponds to the constructor in the <TT
+>datatype</TT
+> parameter.
+</LI
+></UL
+><P
+>NOTE: This function can only be used with <TT
+>EData a</TT
+> where <TT
+>a</TT
+> has a <TT
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Read.html#t%3ARead"
+>Read</A
+></TT
+> instance.  For event
+  data without a read instance, use <TT
+><A HREF="App-Behaviours-FileOps.html#v%3AreadFileBehaviourNR"
+>readFileBehaviourNR</A
+></TT
+>
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AreadFileBehaviourNR"
+></A
+><B
+>readFileBehaviourNR</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>readFileBehaviourNR name datatype</TT
+> looks for any event with the name <EM
+>name</EM
+> and reads the file
+   into an event following the pattern:
+</P
+><UL
+><LI
+> name: same as filename.
+</LI
+><LI
+> group: same as name of the behaviour, <TT
+>name</TT
+>
+</LI
+><LI
+> source: &quot;ReadSource&quot;
+</LI
+><LI
+> timespan: Persistent
+</LI
+><LI
+> eventdata: the file, read in and processed using <TT
+><A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Read.html#v%3Aread"
+>read</A
+></TT
+> to be of the datatype that
+        corresponds to the constructor in the <TT
+>datatype</TT
+> parameter.  The constructor itself should
+        not be serialized.
+</LI
+></UL
+><P
+>NOTE: Attempting to read datatype <TT
+>EOther a</TT
+> using this will cause the program to emit an
+  event with &quot;Exception&quot; as the group and <EM
+>name</EM
+> as the source.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AdecodeFileBehaviour"
+></A
+><B
+>decodeFileBehaviour</B
+> :: Binary a =&gt; <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>decodeFileBehaviour name datatype</TT
+> looks for any event with the name <EM
+>name</EM
+> and reads the file
+   into an event following the pattern:
+</P
+><UL
+><LI
+> name: same as filename.
+</LI
+><LI
+> group: same as name of the behaviour, <TT
+>name</TT
+>
+</LI
+><LI
+> source: &quot;ReadSource&quot;
+</LI
+><LI
+> timespan: Persistent
+</LI
+><LI
+> eventdata: the file, read in and processed using <TT
+>decodeFile</TT
+> to be of the
+        datatype that corresponds to the constructor in the <TT
+>datatype</TT
+> parameter.  The constructor
+        itself need not be serialized.
+</LI
+></UL
+><P
+>NOTE: This function can only be used with <TT
+>EData a</TT
+> where <TT
+>a</TT
+> has a <TT
+>Binary</TT
+> instance.  For event
+  data without a read instance, use <TT
+><A HREF="App-Behaviours-FileOps.html#v%3AdecodeFileBehaviourNB"
+>decodeFileBehaviourNB</A
+></TT
+>
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AdecodeFileBehaviourNB"
+></A
+><B
+>decodeFileBehaviourNB</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a -&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>readFileBehaviour name datatype</TT
+> looks for any event with the name <EM
+>name</EM
+> and reads the file
+   into an event following the pattern:
+</P
+><UL
+><LI
+> name: same as filename.
+</LI
+><LI
+> group: same as name of the behaviour, <TT
+>name</TT
+>
+</LI
+><LI
+> source: &quot;ReadSource&quot;
+</LI
+><LI
+> timespan: Persistent
+</LI
+><LI
+> eventdata: the file, read in and processed using <TT
+>read</TT
+> to be of the datatype that
+        corresponds to the constructor in the <TT
+>datatype</TT
+> parameter.
+</LI
+></UL
+><P
+>NOTE: Attempting to read datatype <TT
+>EOther a</TT
+> using this will cause the program to raise an
+  Event with &quot;Exception&quot; as the group.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AwriteFileBehaviourNS"
+></A
+><B
+>writeFileBehaviourNS</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><TT
+>writeFileBehaviour</TT
+> looks for &quot;WriteFile&quot; named events with event data corresponding to
+   <TT
+>[EString filepath,</TT
+> <EM
+>data constructor</EM
+> <TT
+>contents]</TT
+> and removes them from the bus, writing
+   the file named <TT
+>filepath</TT
+>.  Any error is placed on the bus with an Exception event with
+    &quot;WriteFile&quot; as the source.
+</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AwriteFileBehaviour"
+></A
+><B
+>writeFileBehaviour</B
+> :: <A HREF="/usr/local/share/doc/ghc/libraries/base/Text-Show.html#t%3AShow"
+>Show</A
+> a =&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>writeFileBehaviour</TT
+> looks for &quot;WriteFile&quot; named events with event data corresponding to
+   <TT
+>[EString filepath,</TT
+> <EM
+>data constructor</EM
+> <TT
+>contents]</TT
+> and removes them from the bus, writing
+   the file named <TT
+>filepath</TT
+>.  Any error is placed on the bus with an Exception event with
+    &quot;WriteFile&quot; as the source.
+</P
+><P
+>NOTE: Attempting to encode 'EOther a' using this will raise an Exception.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AencodeFileBehaviourNB"
+></A
+><B
+>encodeFileBehaviourNB</B
+> ::  <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>writeFileBehaviour</TT
+> looks for &quot;WriteFile&quot; named events with event data corresponding to
+   <TT
+>[EString filepath,</TT
+> <EM
+>data constructor</EM
+> <TT
+>contents]</TT
+> and removes them from the bus, writing
+   the file named <TT
+>filepath</TT
+>.  Any error is placed on the bus with an Exception event with
+    &quot;WriteFile&quot; as the source.
+</P
+><P
+>NOTE: Attempting to encode 'EOther a' using this will raise an Exception.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AencodeFileBehaviour"
+></A
+><B
+>encodeFileBehaviour</B
+> :: Binary a =&gt; <A HREF="App-EventBus.html#t%3ABehaviour"
+>Behaviour</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+><TT
+>writeFileBehaviour</TT
+> looks for &quot;WriteFile&quot; named events with event data corresponding to
+   <TT
+>[EString filepath,</TT
+> <EM
+>data constructor</EM
+> <TT
+>contents]</TT
+> and removes them from the bus, writing
+   the file named <TT
+>filepath</TT
+>.  Any error is placed on the bus with an Exception event with
+    &quot;WriteFile&quot; as the source.
+</P
+><P
+>NOTE: This can only be used with an EData a where a has a <TT
+>Binary</TT
+> instance.
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.3.0</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>

@@ -1,0 +1,12 @@
+Config flags:  "--user"
+Build flags:   "--user"
+Haddock flags: ""
+Executable flags:
+               ""
+Install flags: "--user"
+Register flags:
+               ""
+Unregister flags:
+               ""
+Source Distribution flags:
+               ""

@@ -1,0 +1,325 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--Rendered using the Haskell Html Library v0.2-->
+<HTML
+><HEAD
+><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8"
+><TITLE
+>App.Widgets.Environment</TITLE
+><LINK HREF="haddock.css" REL="stylesheet" TYPE="text/css"
+><SCRIPT SRC="haddock-util.js" TYPE="text/javascript"
+></SCRIPT
+></HEAD
+><BODY
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="topbar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><IMG SRC="haskell_icon.gif" WIDTH="16" HEIGHT="16" ALT=" "
+></TD
+><TD CLASS="title"
+>buster-2.2: Almost but not quite entirely unlike FRP</TD
+><TD CLASS="topbut"
+><A HREF="index.html"
+>Contents</A
+></TD
+><TD CLASS="topbut"
+><A HREF="doc-index.html"
+>Index</A
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="modulebar"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD
+><FONT SIZE="6"
+>App.Widgets.Environment</FONT
+></TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Synopsis</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="body"
+><TABLE CLASS="vanilla" CELLSPACING="0" CELLPADDING="0"
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AcommandLineArgsWidget"
+>commandLineArgsWidget</A
+> ::  <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AconfigFileWidget"
+>configFileWidget</A
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AenvironmentWidget"
+>environmentWidget</A
+> ::  <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="s8"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A HREF="#v%3AprogNameWidget"
+>progNameWidget</A
+> ::  <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+></TABLE
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="section1"
+>Documentation</TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AcommandLineArgsWidget"
+></A
+><B
+>commandLineArgsWidget</B
+> ::  <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Place the command line arguments on the bus as an Event following the pattern
+</P
+><UL
+><LI
+> name : argv
+</LI
+><LI
+> group : Environment
+</LI
+><LI
+> source : CommandLineArgsWidget
+</LI
+><LI
+> timespan : Persistent
+</LI
+><LI
+> data : EStringL of the command line args
+</LI
+></UL
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AconfigFileWidget"
+></A
+><B
+>configFileWidget</B
+> ::  <A HREF="/usr/local/share/doc/ghc/libraries/base/Data-Char.html#t%3AString"
+>String</A
+> -&gt; <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Read a config file and place it on the bus as individual events for each config item following the pattern:
+</P
+><UL
+><LI
+> name : config item name
+</LI
+><LI
+> group : Environment
+</LI
+><LI
+> source : <EM
+>filename</EM
+>.ConfigFileWidget
+</LI
+><LI
+> timespan : Persistent
+</LI
+><LI
+> data : EString config item value
+</LI
+></UL
+><P
+>Config files follow a fairly simple grammar:
+</P
+><P
+>ConfigFile := [ConfigLine]
+</P
+><P
+>ConfigLine := <A HREF="key> spaces = spaces <value"
+>key&gt; spaces = spaces &lt;value</A
+> endl | CommentLine | BlankLine
+</P
+><P
+>CommentLine := # anychars endl
+</P
+><P
+>BlankLine := spaces endl
+</P
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AenvironmentWidget"
+></A
+><B
+>environmentWidget</B
+> ::  <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Read in all environment variables and place them on the bus individually as events following the pattern:
+</P
+><UL
+><LI
+> name : variable name
+</LI
+><LI
+> group : Environment
+</LI
+><LI
+> source : EnvironmentWidget
+</LI
+><LI
+> timespan : Persistent
+</LI
+><LI
+> data : EString variable value
+</LI
+></UL
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="decl"
+><A NAME="v%3AprogNameWidget"
+></A
+><B
+>progNameWidget</B
+> ::  <A HREF="App-EventBus.html#t%3AWidget"
+>Widget</A
+> [<A HREF="App-EventBus.html#t%3AEData"
+>EData</A
+> a]</TD
+></TR
+><TR
+><TD CLASS="doc"
+><P
+>Set the program name as an event on the bus using the following pattern:
+</P
+><UL
+><LI
+> name : ProgramName
+</LI
+><LI
+> group : Environment
+</LI
+><LI
+> source : ProgramNameWidget
+</LI
+><LI
+> timespan : Persistent
+</LI
+><LI
+> data : EString progran name
+</LI
+></UL
+></TD
+></TR
+><TR
+><TD CLASS="s15"
+></TD
+></TR
+><TR
+><TD CLASS="botbar"
+>Produced by <A HREF="http://www.haskell.org/haddock/"
+>Haddock</A
+> version 2.3.0</TD
+></TR
+></TABLE
+></BODY
+></HTML
+>
